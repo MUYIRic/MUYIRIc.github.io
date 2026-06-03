@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>login</title>
+		<style>
+			* {
+				padding: 0;
+				margin: 0;
+				box-sizing: border-box;
+				font-family: Arial;
+			}
+			
+			.contanier {
+				width: 100vw;
+				height: 100vh;
+				display: flex;
+				background: url(./img/ocean.jpg);
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				position: relative;
+			}
+			
+			.contanier::before {
+				content: "";
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100vw;
+				height: 100vh;
+				background: rgba(0, 0, 0, 0.2);
+				backdrop-filter: blur(10px);
+				z-index: 1;
+			}
+			
+			.contanier input {
+				background: rgba(255, 255, 255, 0.15);
+                backdrop-filter: blur(12px);
+				-webkit-backdrop-filter: blur(12px);
+				z-index: 999;
+			}
+			
+			.btnGo {
+				width: 15vw;
+				height: 5vh;
+				margin-top: 70px;
+				text-decoration: none;
+				/* btntype */
+				border-radius: 40px;
+				border: 1px solid rgba(255, 255, 255, 0.2);
+				background: rgba(255, 255, 255, 0.15);
+				backdrop-filter: blur(10px);
+				-webkit-backdrop-filter: blur(10px);
+				transition: all 0.3s ease-in-out;
+				z-index: 999;
+				/* font-type */
+				font-size: 20px;
+				font-weight: 700;
+				color: #fff;
+				/* layout */
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+			}
+			
+			.btnGo:hover {
+				scale: 1.2;
+				box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+			}
+		</style>
+	</head>
+	<body>
+		<div class="contanier">
+			<div class="login-card">
+				<input type="text" placeholder="账号/用户名/邮箱" required/>
+				<input type="password" placeholder="密码" required/>
+				<a href="main" class="btnGo">Login</a>
+			</div>
+		</div>
+	</body>
+</html>
