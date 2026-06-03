@@ -1,120 +1,100 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>暮易•日辰</title>
-        <style>
-            @font-face {
-                font-family: "PoetsenOne";
-                src: url("https://raw.githubusercontent.com/MUYIRic/MyFont/refs/heads/main/PoetsenOne-Regular.ttf") format("truetype");
-                font-display: swap;
-            }
-            
-            @font-face {
-                font-family: "WireOne";
-                src: url("https://raw.githubusercontent.com/MUYIRic/MyFont/refs/heads/main/WireOne-Regular.ttf") format("truetype");
-                font-display: swap;
-            }
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>login</title>
+		<style>
+			* {
+				padding: 0;
+				margin: 0;
+				box-sizing: border-box;
+				font-family: Arial;
+			}
+			
+			.contanier {
+				width: 100vw;
+				height: 100vh;
+				display: flex;
+				background: url(./img/ocean.jpg);
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				position: relative;
+			}
+			
+			.contanier::before {
+				content: "";
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100vw;
+				height: 100vh;
+				background: rgba(0, 0, 0, 0.2);
+				backdrop-filter: blur(10px);
+				z-index: 1;
+			}
+			
+			.contanier input {
+				background: rgba(255, 255, 255, 0.15);
+                backdrop-filter: blur(12px);
+				-webkit-backdrop-filter: blur(12px);
+				z-index: 999;
+			}
+			
+			.btnGo {
+				width: 15vw;
+				height: 5vh;
+				margin-top: 70px;
+				text-decoration: none;
+				/* btntype */
+				border-radius: 40px;
+				border: 1px solid rgba(255, 255, 255, 0.2);
+				background: rgba(255, 255, 255, 0.15);
+				backdrop-filter: blur(10px);
+				-webkit-backdrop-filter: blur(10px);
+				transition: all 0.3s ease-in-out;
+				z-index: 999;
+				/* font-type */
+				font-size: 20px;
+				font-weight: 700;
+				color: #fff;
+				/* layout */
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+			}
+			
+			.btnGo:hover {
+				scale: 1.2;
+				box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+			}
 
-            * {
-                padding: 0;
-                margin: 0;
-                box-sizing: border-box;
+            .logo-box{
+                position: fixed;
+                top:20px;
+                left:20px;
+                display:flex;
+                align-items:center;
+                gap:16px;
             }
-            
-            .container {
-                position: relative;
-                width: 100vw;
-                height: 100vh;
-                background: url(./img/ocean.jpg);
-                /* layout */
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
+            .logo-text{
+                color:#fff;
+                font-size:36px;
+                letter-spacing:6px;
             }
-
-            .container::before {
-                content: "";
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.5);
-                backdrop-filter: blur(10px);
-                -webkit-backdrop-filter: blur(10px);
-                z-index: 1;
-            }
-
-            .title {
-                color: #fff;
-                font-size: 12vw;
-                margin-bottom: 20px;
-                z-index: 999;
-                font-weight: 700;
-                animation: up 0.6s ease-in-out;
-                font-family: "PoetsenOne";
-            }
-
-            .sentence {
-                color: #fff;
-                font-size: 2vw;
-                margin-bottom: 100px;
-                z-index: 999;
-                animation: up 0.8s ease-in-out;
-                font-family: "WireOne";
-            }
-
-            .btnGo {
-                text-decoration: none;
-                z-index: 999;
-                transition: all 0.3s ease-in-out;
-                animation: up 1s ease-in-out;
-                /* btn-type */
-                width: 180px;
-                height: 50px;
-                background: rgba(255, 255, 255, 0.15);
-                backdrop-filter: blur(20px);
-                -webkit-backdrop-filter: blur(20px);
-                border-radius: 25px;
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                /* layout */
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                /* text-type */
-                color: #fff;
-                font-size: 20px;
-                font-weight: 700;
-            }
-
-            .btnGo:hover {
-                transform: scale(1.1);
-                box-shadow: 0 4px 10px rgba(190, 215, 223, 0.4);
-            }
-
-            .btnGo:active {
-                transform: scale(0.95);
-            }
-            
-            @keyframes up {
-                0% {
-                    transform: translateY(100px);
-                }
-                100% {
-                    transform: translateY(0);
-                }
-            }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <div class="title">Welcome</div>
-            <div class="sentence">-I offer you the loyalty of a man who has never been loyal-</div>
-            <a href="./login.html" class="btnGo">Embark</a>
-            <div class="scroll"></div>
-        </div>
-    </body>
+		</style>
+	</head>
+	<body>
+		<div class="contanier">
+			<div class="login-card">
+				<input type="text" placeholder="账号/用户名/邮箱" required/>
+				<input type="password" placeholder="密码" required/>
+				<a href="main" class="btnGo">Login</a>
+                <div class="logo-box">
+                    <span>暮</span>
+                </div>
+			</div>
+		</div>
+	</body>
 </html>
