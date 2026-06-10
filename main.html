@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>暮易的个人博客</title>
+    <link rel="icon" href="./img/title-icon.png" type="image/png">
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            font-family: Arial;
+        }
+        body {
+            width: 100vw;
+            min-height: 100vh;
+            background: url(./img/ocean.jpg) center/cover fixed;
+            overflow-x: hidden;
+        }
+        /* 全局毛玻璃遮罩 与登录页完全一致 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 1;
+        }
+        /* 顶部导航栏 */
+        .navbar {
+            width: 100%;
+            height: 70px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 6%;
+        }
+        .blog-logo {
+            font-size: 26px;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
+        }
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            margin-left: 32px;
+            transition: all 0.3s ease-in-out;
+        }
+        .nav-links a:hover {
+            opacity: 0.75;
+        }
+        /* ========== 修复核心：添加align-items: flex-start ========== */
+        .wrap {
+            width: 88%;
+            margin: 100px auto 60px;
+            position: relative;
+            z-index: 2;
+            display: flex;
+            gap: 32px;
+            align-items: flex-start; /* 强制左右模块顶部对齐，解决侧边栏下移 */
+        }
+        /* 左侧文章区域：最小高度兜底，防止空白塌陷 */
+        .main-area {
+            flex: 1;
+            min-height: 60vh;
+        }
+        /* 通用毛玻璃卡片 完全匹配login-card样式 */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 28px 32px;
+            margin-bottom: 24px;
+            transition: all 0.3s ease-in-out;
+        }
+        .glass-card:hover {
+            transform: scale(1.015);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.22);
+        }
+        /* 文章列表 */
+        .article-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 12px;
+            cursor: pointer;
+        }
+        .article-title a {
+            color: #fff;
+            text-decoration: none;
+        }
+        .article-title a:hover {
+            opacity: 0.8;
+        }
+        .article-desc {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.82);
+            line-height: 1.65;
+            margin-bottom: 16px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .article-meta {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            display: flex;
+            gap: 22px;
+            align-items: center;
+        }
+        .article-operate button {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.75);
+            padding: 4px 10px;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: 0.3s;
+        }
+        .article-operate button:hover {
+            background: rgba(255,255,255,0.12);
+            color: #fff;
+        }
+        /* 侧边栏 */
+        .sidebar {
+            width: 290px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        .avatar-box {
+            text-align: center;
+        }
+        .avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            background: rgba(255,255,255,0.08);
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 32px;
+        }
+        .author-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+        .author-intro {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.65);
+            line-height: 1.6;
+        }
+        /* 分类标签 */
+        .cate-item {
+            display: inline-block;
+            padding: 6px 14px;
+            margin: 6px 8px 6px 0;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 30px;
+            color: rgba(255,255,255,0.75);
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .cate-item.active {
+            background: rgba(255,255,255,0.18);
+            color: #fff;
+        }
+        .cate-item:hover {
+            background: rgba(255,255,255,0.12);
+            color: #fff;
+        }
+        /* 发布按钮 复刻登录btnGo */
+        .write-btn {
+            display: block;
+            width: 100%;
+            height: 50px;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: #fff;
+            font-size: 20px;
+            font-weight: 700;
+            text-align: center;
+            line-height: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease-in-out;
+        }
+        .write-btn:hover {
+            scale: 1.12;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        /* 写文章弹窗 */
+        .modal-wrap {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-card {
+            width: 52vw;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            padding: 30px;
+        }
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .close-modal {
+            font-size: 26px;
+            color: rgba(255,255,255,0.7);
+            cursor: pointer;
+        }
+        .modal-card input, .modal-card textarea, .modal-card select {
+            width: 100%;
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 16px;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+        }
+        .modal-card input::placeholder, .modal-card textarea::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+        .modal-card textarea {
+            min-height: 140px;
+            resize: none;
+        }
+        .submit-article {
+            width: 100%;
+            height: 48px;
+            border-radius: 40px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .submit-article:hover {
+            scale: 1.03;
+            background: rgba(255,255,255,0.2);
+        }
+        /* 提示弹窗 */
+        .toast {
+            position: fixed;
+            left: 50%;
+            top: 45%;
+            transform: translate(-50%,-50%);
+            background: rgba(0,0,0,0.65);
+            color: #fff;
+            padding: 12px 30px;
+            border-radius: 10px;
+            z-index: 99999;
+            display: none;
+        }
+        /* 滚动指示器动画 */
+        .scroll-tip {
+            width: 32px;
+            height: 52px;
+            border: 2px solid rgba(255,255,255,0.6);
+            border-radius: 30px;
+            position: fixed;
+            left: 50%;
+            bottom: 36px;
+            transform: translateX(-50%);
+            z-index: 99;
+        }
+        .scroll-tip::before {
+            content: "";
+            width: 7px;
+            height: 7px;
+            background: rgba(255,255,255,0.7);
+            border-radius: 50%;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: updown 1.5s infinite ease-in-out;
+        }
+        @keyframes updown {
+            0% { top: 8px; opacity: 1; transform: translateX(-50%) translateY(0px); }
+            100% { top: 38px; opacity: 0; transform: translateX(-50%) translateY(20px); }
+        }
+        /* 空文章提示 */
+        .empty-tip {
+            text-align: center;
+            padding: 80px 0;
+            color: rgba(255,255,255,0.5);
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <div class="navbar">
+        <a href="blog.html" class="blog-logo">暮易的个人博客</a>
+        <div class="nav-links">
+            <a href="blog.html">首页</a>
+            <a href="#">文章归档</a>
+            <a href="#">关于我</a>
+            <a href="login.html">登录</a>
+        </div>
+    </div>
+
+    <div class="wrap">
+        <!-- 左侧文章区域 -->
+        <div class="main-area" id="articleWrap"></div>
+        <!-- 右侧侧边栏 -->
+        <div class="sidebar">
+            <div class="glass-card avatar-box">
+                <div class="avatar">暮</div>
+                <div class="author-name">暮易</div>
+                <div class="author-intro">前端自学爱好者，分享网页设计、编程学习笔记，所有页面源码开源可自取。</div>
+            </div>
+            <div class="glass-card">
+                <a href="javascript:openModal()" class="write-btn">撰写新文章</a>
+            </div>
+            <div class="glass-card">
+                <h3 style="color:#fff;margin-bottom:14px;font-size:18px;font-weight:700;">文章分类</h3>
+                <div id="cateWrap">
+                    <span class="cate-item active" data-cate="all">全部</span>
+                    <span class="cate-item" data-cate="前端开发">前端开发</span>
+                    <span class="cate-item" data-cate="页面设计">页面设计</span>
+                    <span class="cate-item" data-cate="JavaScript">JavaScript</span>
+                    <span class="cate-item" data-cate="工具分享">工具分享</span>
+                    <span class="cate-item" data-cate="生活随笔">生活随笔</span>
+                </div>
+            </div>
+            <div class="glass-card">
+                <h3 style="color:#fff;margin-bottom:14px;font-size:18px;font-weight:700;">博客统计</h3>
+                <div style="color:rgba(255,255,255,0.7);font-size:15px;line-height:2;">
+                    <p>总文章：<span id="totalNum">0</span></p>
+                    <p>今日更新：<span id="todayNum">0</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 写文章弹窗 -->
+    <div class="modal-wrap" id="writeModal">
+        <div class="modal-card">
+            <div class="modal-title">
+                发布新文章
+                <span class="close-modal" onclick="closeModal()">×</span>
+            </div>
+            <input type="text" id="artTitle" placeholder="请输入文章标题">
+            <select id="artCate">
+                <option value="前端开发">前端开发</option>
+                <option value="页面设计">页面设计</option>
+                <option value="JavaScript">JavaScript</option>
+                <option value="工具分享">工具分享</option>
+                <option value="生活随笔">生活随笔</option>
+            </select>
+            <textarea id="artContent" placeholder="请输入文章完整内容..."></textarea>
+            <button class="submit-article" onclick="submitArticle()">确认发布</button>
+        </div>
+    </div>
+
+    <!-- 提示弹窗 -->
+    <div class="toast" id="toastTip"></div>
+    <!-- 底部滚动提示 -->
+    <div class="scroll-tip"></div>
+
+<script>
+    let currentCate = "all";
+    // 本地存储文章数据结构
+    let artList = JSON.parse(localStorage.getItem("blogArtData")) || [
+        {
+            id: 1,
+            title: "前端零基础完整自学路线分享",
+            cate: "前端开发",
+            content: "整理一套适合新手的HTML/CSS/JS学习流程，配套免费学习网站、工具清单、练习项目，零基础自学完全够用，附带你现在在用的毛玻璃页面完整源码。",
+            desc: "整理一套适合新手的HTML/CSS/JS学习流程，配套免费学习网站、工具清单、练习项目，零基础自学完全够用，附带你现在在用的毛玻璃页面完整源码。",
+            time: "2026-06-09 15:40",
+            view: 136,
+            like: 24,
+            liked: false
+        },
+        {
+            id: 2,
+            title: "深海毛玻璃网页界面设计思路",
+            cate: "页面设计",
+            content: "讲解backdrop-filter毛玻璃、深色海洋背景页面的完整实现思路，包含导航、卡片、按钮交互全套CSS写法，无冗余代码，可直接复制复用。",
+            desc: "讲解backdrop-filter毛玻璃、深色海洋背景页面的完整实现思路，包含导航、卡片、按钮交互全套CSS写法，无冗余代码，可直接复制复用。",
+            time: "2026-06-10 10:22",
+            view: 219,
+            like: 46,
+            liked: false
+        },
+        {
+            id: 3,
+            title: "JS本地存储localStorage使用教程",
+            cate: "JavaScript",
+            content: "通俗易懂讲解本地持久化存储用法，结合论坛、博客案例演示发帖、点赞数据本地保存，刷新页面数据不丢失，附带完整可运行JS代码。",
+            desc: "通俗易懂讲解本地持久化存储用法，结合论坛、博客案例演示发帖、点赞数据本地保存，刷新页面数据不丢失，附带完整可运行JS代码。",
+            time: "2026-06-10 11:05",
+            view: 97,
+            like: 18,
+            liked: false
+        }
+    ];
+
+    // 弹窗提示
+    function showToast(msg) {
+        const tip = document.getElementById("toastTip");
+        tip.innerText = msg;
+        tip.style.display = "block";
+        setTimeout(()=>tip.style.display = "none",1400);
+    }
+    // 保存数据到本地存储
+    function saveData() {
+        localStorage.setItem("blogArtData", JSON.stringify(artList));
+    }
+    // 获取当前时间
+    function getNowTime() {
+        const d = new Date();
+        const y = d.getFullYear();
+        const m = String(d.getMonth()+1).padStart(2,"0");
+        const day = String(d.getDate()).padStart(2,"0");
+        const h = String(d.getHours()).padStart(2,"0");
+        const min = String(d.getMinutes()).padStart(2,"0");
+        return `${y}-${m}-${day} ${h}:${min}`;
+    }
+    // 判断是否今日文章
+    function isToday(timeStr) {
+        const today = new Date().toLocaleDateString();
+        const artDay = new Date(timeStr).toLocaleDateString();
+        return today === artDay;
+    }
+    // 渲染统计
+    function renderStat() {
+        document.getElementById("totalNum").innerText = artList.length;
+        document.getElementById("todayNum").innerText = artList.filter(i=>isToday(i.time)).length;
+    }
+    // 渲染文章列表
+    function renderArticle() {
+        const wrap = document.getElementById("articleWrap");
+        let filterArr = currentCate === "all" ? artList : artList.filter(i=>i.cate === currentCate);
+        if(filterArr.length === 0) {
+            wrap.innerHTML = `<div class="empty-tip">该分类暂无文章，快去发布第一篇吧</div>`;
+            renderStat();
+            return;
+        }
+        let html = "";
+        filterArr.forEach(item=>{
+            html += `
+                <div class="glass-card" data-id="${item.id}">
+                    <div class="article-title">
+                        <a href="article.html?id=${item.id}">${item.title}</a>
+                    </div>
+                    <div class="article-desc">${item.desc}</div>
+                    <div class="article-meta">
+                        <span>分类：${item.cate}</span>
+                        <span>发布：${item.time}</span>
+                        <span>阅读 ${item.view}</span>
+                        <span>点赞 ${item.like}</span>
+                        <div class="article-operate">
+                            <button onclick="toggleLike(${item.id})">${item.liked ? "已点赞":"点赞"}</button>
+                            <button onclick="delArticle(${item.id})">删除</button>
+                        </div>
+                    </div>
+                </div>
+            `
+        })
+        wrap.innerHTML = html;
+        renderStat();
+    }
+    // 分类切换
+    document.getElementById("cateWrap").addEventListener("click",e=>{
+        if(e.target.tagName !== "SPAN") return;
+        document.querySelectorAll("#cateWrap .cate-item").forEach(s=>s.classList.remove("active"));
+        e.target.classList.add("active");
+        currentCate = e.target.dataset.cate;
+        renderArticle();
+    })
+    // 打开/关闭发布弹窗
+    function openModal() {
+        document.getElementById("writeModal").style.display = "flex";
+    }
+    function closeModal() {
+        document.getElementById("writeModal").style.display = "none";
+        // 清空输入框
+        document.getElementById("artTitle").value = "";
+        document.getElementById("artContent").value = "";
+    }
+    // 发布新文章
+    function submitArticle() {
+        const title = document.getElementById("artTitle").value.trim();
+        const content = document.getElementById("artContent").value.trim();
+        const cate = document.getElementById("artCate").value;
+        if(!title) return showToast("请填写文章标题");
+        if(!content) return showToast("请填写文章内容");
+        const maxId = artList.length ? Math.max(...artList.map(i=>i.id)) : 0;
+        const newArt = {
+            id: maxId + 1,
+            title,
+            cate,
+            content,
+            desc: content.slice(0,80)+"...",
+            time: getNowTime(),
+            view: 0,
+            like: 0,
+            liked: false,
+            comment: []
+        }
+        artList.unshift(newArt);
+        saveData();
+        renderArticle();
+        closeModal();
+        showToast("文章发布成功！");
+    }
+    // 点赞/取消点赞
+    function toggleLike(id) {
+        const target = artList.find(i=>i.id === id);
+        if(target.liked) {
+            target.like -= 1;
+            target.liked = false;
+        } else {
+            target.like += 1;
+            target.liked = true;
+        }
+        saveData();
+        renderArticle();
+    }
+    // 删除文章
+    function delArticle(id) {
+        if(!confirm("确认删除？删除后无法恢复")) return;
+        artList = artList.filter(i=>i.id !== id);
+        saveData();
+        renderArticle();
+        showToast("文章已删除");
+    }
+    window.onload = renderArticle;
+</script>
+</body>
+</html>

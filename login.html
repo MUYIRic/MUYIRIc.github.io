@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 	<head>
+		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>login</title>
+        <link rel="icon" href="./img/title-icon.png" type="image/png">
 		<style>
 			* {
 				padding: 0;
@@ -40,11 +42,57 @@
 				-webkit-backdrop-filter: blur(12px);
 				z-index: 999;
 			}
+
+			.login-card {
+				width: 400px;
+				height: 500px;
+				padding: 20px;
+				background: rgba(255, 255, 255, 0.15);
+				border-radius: 20px;
+				border: 1px solid rgba(255, 255, 255, 0.2);
+				z-index: 999;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				position: relative;
+			}
+
+			.title {
+				font-size: 50px;
+				font-weight: 700;
+				color: #fff;
+				margin-bottom: 20px;
+				margin-top: -40px;
+				z-index: 999;
+			}
+
+			input {
+				width: 350px;
+				height: 50px;
+				margin-top: 20px;
+				padding: 0 10px;
+				border: 1px solid rgba(255, 255, 255, 0.2);
+				border-radius: 10px;
+				font-size: 16px;
+				background: transparent;
+				color: #fff;
+			}
+
+			input::placeholder {
+				color: rgba(255, 255, 255, 0.7);
+			}
+
+			input:focus {
+				outline: none;
+				border-color: rgba(255, 255, 255, 0.5);
+				box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+			}
 			
 			.btnGo {
-				width: 15vw;
-				height: 5vh;
-				margin-top: 70px;
+				width: 350px;
+				height: 50px;
+				margin-top: 30px;
 				text-decoration: none;
 				/* btntype */
 				border-radius: 40px;
@@ -69,14 +117,16 @@
 				scale: 1.2;
 				box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 			}
+
 		</style>
 	</head>
 	<body>
 		<div class="contanier">
 			<div class="login-card">
+				<div class="title">登录</div>
 				<input type="text" placeholder="账号/用户名/邮箱" required/>
 				<input type="password" placeholder="密码" required/>
-				<a href="main" class="btnGo">Login</a>
+				<a href="main.html" class="btnGo">Login</a>
 			</div>
 		</div>
 	</body>
